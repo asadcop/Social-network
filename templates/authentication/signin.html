@@ -1,0 +1,24 @@
+{% extends './navBar.html' %}
+
+{%block navbar%}
+
+<form method="post">
+    {% csrf_token %}
+    <div class="container">
+      <h1>Sign In</h1>
+      <hr>
+      <label for=""><b>User Name</b></label>
+      <br>
+      <input type="text" placeholder="Enter User Name" name="username" required>
+      <br>
+      <label for="psw"><b>Password</b></label>
+      <br>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+      <br>
+      <div class="clearfix">
+        <button type="submit" class="signupbtn">Sign In</button>
+      </div> <a href={% url 'authentication:forgot-password' %}>Forgot Password</a>
+    </div>
+  </form>
+
+  {%endblock navbar%}

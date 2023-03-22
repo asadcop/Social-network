@@ -11,8 +11,6 @@ from .tokens import generate_tokens
 
 
 # Create your views here.
-def home(request):
-    return render(request, "authentication/index.html")
 
 def signup(request):
     if not request.user.is_authenticated:
@@ -24,19 +22,19 @@ def signup(request):
             
             if User.objects.filter(username=username):
                 messages.error(request, "Username already exist! please try some other username")
-                return redirect('/signup')
+                return redirect('/accounts/signup')
             
             if User.objects.filter(email=email):
                 messages.error(request, "Emali already registered!")
-                return redirect('/signup')
+                return redirect('/accounts/signup')
                         
             if password1 != password2:
                 messages.error(request,"Password didn't match!")
-                return redirect('/signup')
+                return redirect('/accounts/signup')
             
             if not username.isalnum():
                 messages.error(request,"Username must be Alpha-Numeric!")
-                return redirect('/signup')
+                return redirect('/accounts/signup')
 
 
             newuser = User.objects.create_user(username, email, password1)
@@ -67,10 +65,10 @@ def signup(request):
             email.fail_silently=True
             email.send()
 
-            return redirect('/signin')
+            return redirect('/accounts/login')
         return render(request, "authentication/signup.html")
     else:
-        return redirect('/')
+        return redirect('/timeline/')
     
 
 def signin(request):
@@ -84,21 +82,21 @@ def signin(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "LogIn Successfull")
-                return redirect('/')
+                return redirect('/timeline/')
             else:
                 messages.error(request, "username or password maybe incorrect")
-                return redirect('/signin')
+                return redirect('/accounts/login')
 
         return render(request, "authentication/signin.html")
     else:
-        return redirect('/')
+        return redirect('/timeline/')
 
 def signout(request):
     logout(request)
     messages.success(request,"Logged Out Successfull")
     return redirect('/')
 
-
+#email activate
 def activate(request, uid, token):
 
     try:
@@ -111,10 +109,12 @@ def activate(request, uid, token):
         newuser.is_active=True 
         newuser.save()
         login(request, newuser)
-        return  redirect('/')
+        return  redirect('/timeline/')
     else:
         return render(request,'authentication/activation_failed.html')
 
+
+#forgot password page rendar and get email address 
 def forgot_password(request):
     if not request.user.is_authenticated:
         if request.method=='POST':
@@ -142,10 +142,11 @@ def forgot_password(request):
                 email.fail_silently=True
                 email.send()
             messages.success(request,'email sent successfully')
-            return redirect('/signin')
+            return redirect('/accounts/login')
         return render(request,'authentication/forgot_password.html')
     else:
         return redirect('/')
+
 
 def forgot_password_active_url(request,uid,token):
     try:
@@ -158,7 +159,8 @@ def forgot_password_active_url(request,uid,token):
        return  render(request, 'authentication/resat_password.html',{'uid': uid})
     else:
         return render(request,'authentication/activation_failed.html')
-    
+
+#set new password 
 def resat_password(request):
     if request.method=='POST':
         uid=request.POST['uid']
@@ -182,4 +184,4 @@ def resat_password(request):
 
     
 
-    return redirect('/signin')
+    return redirect('/accounts/login')

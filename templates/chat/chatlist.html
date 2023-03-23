@@ -1,8 +1,7 @@
 {% load static %}
 
-<!DOCTYPE html>
 <html>
-	<head>
+<head>
 		<title>Chat</title>
 		<link rel="stylesheet" href={% static 'bootstrap.main.css' %} integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
@@ -13,9 +12,28 @@
         <link rel="stylesheet" href={% static 'chat/chat.css' %} >
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<link rel="stylesheet" href={% static 'core/home.css' %}
 	</head>
 	<!--Coded With Love By Mutiullah Samim-->
 	<body>
+		<nav>
+			<ul>
+				
+				{% if user.is_authenticated %}			
+	
+				<li><a href={% url 'core:profile' %}> Profile</a></li>
+				<li><a href={% url 'core:friend' %}> Friends</a></li>
+				<li><a href={% url 'chat:chatlist' %}>Messages</a></li>
+				<li><a href={% url 'core:notification' %}>Notification</a></li>
+				<li><a href={% url 'core:timeline' %}>Timeline</a></li>
+				<li><a href={% url 'authentication:signout' %}>SignOut</a></li>
+				{% else %}
+				<li><a href={% url 'core:home' %}>Home</a></li>
+				{% endif %}
+			</ul>
+		</nav>
+
+
 		<div class="container-fluid h-100">
 			<div class="row justify-content-center h-100">
 					
@@ -31,18 +49,29 @@
 					<div class="card-body contacts_body">
 						<ui class="contacts">
 						{% for friend in friends %}
+						<a href={% url 'chat:chatbox' friend.sender.id %}>
 						<li class="active">
 							<div class="d-flex bd-highlight">
 								<div class="img_cont">
 									<img src={% static 'img/default_dp.png' %} class="rounded-circle user_img">
 								</div>
-								<a src={% url 'chat:chatbox' '{{friend.sender.pk}}' %}>
+								
 								<div class="user_info">
-									<span>{{friend.sender}}</span>
+									<span>
+										
+									
+										{% if request.user == friend.sender%}
+										{{friend.receiver}}
+										{% else %}
+										{{friend.sender}}
+										{% endif %}
+										
+									</span>
 								</div>
-							</a>
+							
 							</div>
 						</li>
+				</a>
                         {% endfor %}
 						</ui>
 					</div>

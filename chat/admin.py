@@ -2,7 +2,7 @@ from django.contrib import admin
 from . import models
 # Register your models here.
 
-class MassageAdmin(admin.ModelAdmin):
+class MessageAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(models.Massages,MassageAdmin)
+admin.site.register(models.Messages,MessageAdmin)

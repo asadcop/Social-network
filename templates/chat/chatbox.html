@@ -11,11 +11,32 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
         <link rel="stylesheet" href={% static 'chat/chat.css' %} >
+		<link rel="stylesheet" href={% static 'core/home.css' %} >
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	</head>
 	<!--Coded With Love By Mutiullah Samim-->
 	<body>
+
+		<nav>
+			<ul>
+				
+				{% if user.is_authenticated %}			
+	
+				<li><a href={% url 'core:profile' %}> Profile</a></li>
+				<li><a href={% url 'core:friend' %}> Friends</a></li>
+				<li><a href={% url 'chat:chatlist' %}>Messages</a></li>
+				<li><a href={% url 'core:notification' %}>Notification</a></li>
+				<li><a href={% url 'core:timeline' %}>Timeline</a></li>
+				<li><a href={% url 'authentication:signout' %}>SignOut</a></li>
+				{% else %}
+				<li><a href={% url 'core:home' %}>Home</a></li>
+				{% endif %}
+			</ul>
+		</nav>
+
+
+
 		<div class="container-fluid h-100">
 			<div class="row justify-content-center h-100">
 				
@@ -28,8 +49,8 @@
 									
 								</div>
 								<div class="user_info">
-									<span>Chat with {{username}}</span>
-									<p>{{massages|length}}</p>
+									<span>Chat with {{senduser.username}}</span>
+									<p>{{messages|length}}</p>
 								</div>
 								
 							</div>
@@ -37,29 +58,30 @@
 						</div>
 						<div class="card-body msg_card_body">
 							
-							{% for massage in massages %}
+							{% for message  in messages %}
+							{% if senduser == message.receiver %}
 							<div class="d-flex justify-content-start mb-4">
-								{% if user==massage.sender%}
 								<div class="msg_cotainer">
-									{{massage.massage}}
-									<span class="msg_time">{{massage.sendtime}}</span>
+									{{message.message}}
+									{% comment %} <span class="msg_time">{{recive_message.sendtime}}</span> {% endcomment %}
 								</div>
 							</div>
 							{% else %}
 							<div class="d-flex justify-content-end mb-4">
 								<div class="msg_cotainer_send">
-									{{massage.massage}}
-									<span class="msg_time_send">{{massage.sendtime}}</span>
+									{{message.message}}
+									{% comment %} <span class="msg_time_send">{{send_message.sendtime}}</span> {% endcomment %}
 								</div>
 							</div>
 							{% endif %}
 							{% endfor %}
 						</div>
-						<form method="POST">
+						<form method="post">
+							{% csrf_token %}
 						<div class="card-footer">
 							<div class="input-group">
 								
-								<textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
+								<input name="message" class="form-control type_msg" placeholder="Type your message..." required>
 								<div class="input-group-append">
 									<span class="input-group-text send_btn"><button><i class="fas fa-location-arrow"></i></button></span>
 								</div>

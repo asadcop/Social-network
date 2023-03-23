@@ -3,6 +3,7 @@
 <head>
 	<title>My Social Network</title>
 	<link rel="stylesheet" href={% static 'core/home.css' %}>
+	{% block homehead %}{% endblock homehead %}
 </head>
 <body>
 	<header>
@@ -32,8 +33,14 @@
 		<a href ={% url 'authentication:signup' %}><button>Sign Up</button></a>
 		<a href={% url 'authentication:signin' %}><button>Sing In</button></a>
         {% endif %}
+
+		{% block home %}
+		{% endblock home %}
+
 	</section>
     
+
+
 	<footer>
 		<p>&copy; 2023 My Social Network</p>
 	</footer>

@@ -17,7 +17,7 @@ def timeline(request):
         'likes':likes,
     }
     if request.method=='POST':
-        postid=request.POST['']
+        postid=request.POST['like']
         post_get=models.Post.objects.get(pk=postid)
         is_liked=models.Like.objects.get(liker=request.user,post=postid)
         if is_liked is not None:

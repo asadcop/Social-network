@@ -76,7 +76,7 @@
 							{% endif %}
 							{% endfor %}
 						</div>
-						<form method="post">
+						<form action={% url 'chat:sendmessage' senduser.pk %} method="post">
 							{% csrf_token %}
 						<div class="card-footer">
 							<div class="input-group">

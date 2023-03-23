@@ -8,11 +8,11 @@ from django.contrib.auth.models import User
 def chatbox(request,senderr):
     
     senduser=User.objects.get(pk=senderr)
-    if request.method=='POST':
+    # if request.method=='POST':
         
-        newmessage=request.POST['message']
-        new_message=Messages(sender=request.user,receiver=senduser,message=newmessage)
-        new_message.save()
+    #     newmessage=request.POST['message']
+    #     new_message=Messages(sender=request.user,receiver=senduser,message=newmessage)
+    #     new_message.save()
     
     messages= Messages.objects.filter(sender=senderr,receiver=request.user).order_by('sendtime')|Messages.objects.filter(sender=request.user,receiver=senderr).order_by('sendtime')
     
@@ -26,6 +26,15 @@ def chatbox(request,senderr):
 
     return render(request, 'chat/chatbox.html',context)
 
+@login_required
+def sendmessage(request, sender):
+    senduser=User.objects.get(pk=sender)
+    if request.method=='POST':
+        
+        newmessage=request.POST['message']
+        new_message=Messages(sender=request.user,receiver=senduser,message=newmessage)
+        new_message.save()
+    return redirect(f'/chat/box/{sender}')
 
 @login_required
 def chatlist(request):

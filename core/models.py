@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Post(models.Model):
     post_description=models.TextField()
-    post_image=models.FileField(upload_to='core/post/')
+    post_image=models.FileField(upload_to='core/post/', null=True,blank=True)
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     numbers_of_likes=models.IntegerField(default=0)
     def __str__(self):
